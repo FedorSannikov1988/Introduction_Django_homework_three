@@ -8,7 +8,6 @@ from django.shortcuts import render, get_object_or_404
 
 def get_all_customer_orders_and_lists_items_in_order(request,
                                                      name_client: str):
-
     client = \
         Client.objects.filter(name=name_client).first()
 
@@ -27,17 +26,15 @@ def for_sort_products_in_ordered(date_and_time_placing_order: datetime,
                                  what_is_it_compared_to: datetime,
                                  list_products: list,
                                  order: Order):
-
     if date_and_time_placing_order >= what_is_it_compared_to:
         for one_product in order.product.all():
             if one_product not in list_products:
                 list_products.append(one_product)
 
 
-def get_list_products_ordered_by_customer_from_all_his_orders(request,
-                                                              name_client: str):
-
-    #client = get_object_or_404(Client, name=name_client)
+def get_list_products_ordered_by_customer_from_all_his_orders_v1(request,
+                                                                 name_client: str):
+    # client = get_object_or_404(Client, name=name_client)
     client = Client.objects.filter(name=name_client).first()
 
     orders = \
@@ -47,7 +44,7 @@ def get_list_products_ordered_by_customer_from_all_his_orders(request,
 
     seven_days_ago = current_datetime - timedelta(days=7)
     thirty_days_ago = current_datetime - timedelta(days=30)
-    #year_days_ago = current_datetime - timedelta(days=365)
+    # year_days_ago = current_datetime - timedelta(days=365)
     year_days_ago_v2 = current_datetime - relativedelta(years=1)
 
     seven_days_ago_list_product: list = []
@@ -55,7 +52,6 @@ def get_list_products_ordered_by_customer_from_all_his_orders(request,
     year_ago_list_product: list = []
 
     for order in orders:
-
         date_and_time_placing_order: datetime = \
             order.date_and_time_placing_order.replace(tzinfo=None)
 
@@ -100,10 +96,9 @@ def get_list_products_ordered_by_customer_from_all_his_orders(request,
                   context)
 
 
-class GetListProductsOrderedByCustomerIdFromAllHisOrders(View):
+class GetListProductsOrderedByCustomerIdFromAllHisOrdersV2(View):
 
     def get(self, request, id_client: int):
-
         client = get_object_or_404(Client, pk=id_client)
 
         orders = \
@@ -164,11 +159,10 @@ class GetListProductsOrderedByCustomerIdFromAllHisOrders(View):
                       context)
 
 
-class GetListProductsOrderedByCustomerIdFromAllHisOrdersV2(TemplateView):
+class GetListProductsOrderedByCustomerIdFromAllHisOrdersV3(TemplateView):
     template_name = "get_list_products_ordered_by_customer_from_all_his_orders.html"
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
 
         id_client = self.kwargs['id_client']
