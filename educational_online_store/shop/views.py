@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from shop.models import Client, Order
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from django.shortcuts import render, get_object_or_404
 
 
 def get_all_customer_orders_and_lists_items_in_order(request,
@@ -35,8 +35,8 @@ def for_sort_products_in_ordered(date_and_time_placing_order: datetime,
 def get_list_products_ordered_by_customer_from_all_his_orders(request,
                                                               name_client: str):
 
-    client = \
-        Client.objects.filter(name=name_client).first()
+    #client = get_object_or_404(Client, name=name_client)
+    client = Client.objects.filter(name=name_client).first()
 
     orders = \
         Order.objects.filter(client=client).all()
@@ -96,3 +96,7 @@ def get_list_products_ordered_by_customer_from_all_his_orders(request,
     return render(request,
                   "get_list_products_ordered_by_customer_from_all_his_orders.html",
                   context)
+
+
+def page_not_found(request, exception):
+    return render(request, 'for_404.html', status=404)
